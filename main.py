@@ -9,9 +9,12 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from functools import wraps
 from sqlalchemy.orm import relationship
 from flask_gravatar import Gravatar
+import os
+from dotenv import load_dotenv
 
+load_dotenv(".env")
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'c26cae62774ae213b8fb33751976d90866bb9f4612494a726739ff9bf321b9f0'
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
@@ -107,7 +110,7 @@ def register():
         pre_hash_password = form.password.data
         hash_password = generate_password_hash(
             password=pre_hash_password,
-            method="pbkdf2:sha256",
+            method=os.getenv("HASH_METHOD"),
             salt_length=8)
 
         new_email = form.email.data
